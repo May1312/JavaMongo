@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -25,16 +26,12 @@ public class MongoDao {
 
 		Query<User> query = MongoUtil.getDataStore().createQuery(User.class);
 		// AdvancedDatastore dataStore = MongoUtil.getDataStore();
-		/*
-		 * long countAll = query.countAll(); System.out.println(countAll);
-		 */
-		/*
-		 * User user = new User(); user.setName("sansan"); user.setAge(18);
-		 * user.setSex("1"); dataStore.insert(user);
-		 */
-		query.field("name").equal("sansan");
-		List<User> list = query.asList();
-		System.out.println(list.get(0));
+		 //long countAll = query.countAll(); System.out.println(countAll);
+		 // User user = new User(); user.setName("sansan"); user.setAge(18);
+		 // user.setSex("1"); dataStore.insert(user);
+			query.field("name").equal("sansan");
+			List<User> list = query.asList();
+			System.out.println(list.get(0));
 	}
 
 	/**
@@ -43,6 +40,12 @@ public class MongoDao {
 	 * @throws Exception
 	 */
 	public void add(User user) throws Exception {
+		DBCollection dbCollection = mongoTemplate.getCollection("User");
+		BasicDBObject doc1 = new BasicDBObject();  
+        doc1.put("age", 30); 
+        dbCollection.insert(doc1);
+	}
+	public  void query(User user) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException{
 		DBCollection dbCollection = mongoTemplate.getCollection("User");
 		DBCursor cursor = dbCollection.find();
 		while (cursor.hasNext()) {
