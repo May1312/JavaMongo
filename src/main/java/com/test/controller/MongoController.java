@@ -2,7 +2,6 @@ package com.test.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,7 +16,9 @@ public class MongoController {
 	private MongoService mongoService;
 
 	@RequestMapping(value="/receive",method=RequestMethod.GET)
-	public void receiveDate(@RequestBody User user){
+	public void receiveDate(){
+		User user = new User();
 		mongoService.add(user);
+		System.out.println("------");
 	}
 }

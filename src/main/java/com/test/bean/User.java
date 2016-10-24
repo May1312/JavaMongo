@@ -2,6 +2,9 @@ package com.test.bean;
 
 import java.io.Serializable;
 
+import org.mongodb.morphia.annotations.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+@Document(collection="User")
 public class User implements Serializable{
 
 	private static final long serialVersionUID = 8028989597226068116L;
@@ -11,6 +14,8 @@ public class User implements Serializable{
 	public String toString() {
 		return "User [name=" + name + ", age=" + age + ", sex=" + sex + "]";
 	}
+	@Id
+	private String id;
 	private int age;
 	private String sex;
 	public String getName() {

@@ -14,7 +14,12 @@ public class MongoServiceImpl implements MongoService {
 	private MongoDao mongodab;
 
 	public void add(User user) {
-		mongodab.add(user);
+		try {
+			mongodab.add(user);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

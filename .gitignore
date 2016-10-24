@@ -3,3 +3,5 @@
 .project
 /**/target
 /**/.setting
+.JavaMongo.iml
+/**/.idea

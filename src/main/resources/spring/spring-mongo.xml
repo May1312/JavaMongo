@@ -1,38 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>  
-<beans xmlns="http://www.springframework.org/schema/beans"  
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
-    xmlns:context="http://www.springframework.org/schema/context"  
-    xmlns:mongo="http://www.springframework.org/schema/data/mongo"  
-    xsi:schemaLocation="http://www.springframework.org/schema/context   
-          http://www.springframework.org/schema/context/spring-context-3.0.xsd   
-          http://www.springframework.org/schema/data/mongo   
-          http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd   
-          http://www.springframework.org/schema/beans   
-          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">  
-          
-     <!-- 获取配置文件属性 -->  
-    <bean id="placeholderConfig"  
-        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
-        <property name="location">  
-            <value>classpath:mongo.properties</value>  
-        </property>  
-    </bean>  
-  
-    <!-- Default bean name is 'mongo' -->  
-    <!-- 连接池配置详细查看http://api.mongodb.org/java/2.7.2/com/mongodb/MongoOptions.html#connectionsPerHost   
-        或者http://www.cnblogs.com/huangfox/archive/2012/04/01/2428947.html  
-    -->  
-    <mongo:mongo host="${datasource.host}" port="${datasource.port}">  
-        <mongo:options connections-per-host="10"  
-            threads-allowed-to-block-for-connection-multiplier="10"  
-            auto-connect-retry="true" />  
-    </mongo:mongo>  
-  
-  
-    <!-- Spring提供的mongodb操作模板-->  
-    <bean id="mongoTemplate"  
-        class="org.springframework.data.mongodb.core.MongoTemplate">  
-        <constructor-arg ref="mongo" />  
-        <constructor-arg name="databaseName" value="${datasource.dbname}" />  
-    </bean>  
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+http://www.springframework.org/schema/jee
+http://www.springframework.org/schema/jee/spring-jee-4.1.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.1.xsd
+http://www.springframework.org/schema/schema/util
+http://www.springframework.org/schema/schema/util/spring-util-4.1.xsd
+http://www.springframework.org/schema/data/mongo
+http://www.springframework.org/schema/data/mongo/spring-mongo-1.5.xsd">
+
+	<context:annotation-config />
+
+	<!-- 提供该PropertyPlaceholderConfigurer bean支持把properties文件中的信息读取到XML配置文件的表达式中 -->
+	<!-- 从Spring2.5开始引入命名空间配置加载properties文件到XML -->
+	<context:property-placeholder
+		location="classpath*:/mongo.properties" />
+
+	<!-- 通过工厂Bean创建mongo连接实例,没有密码就把username和password属性删除了 -->
+	<mongo:db-factory host="${db.host}" port="${db.port}"
+		dbname="${db.database}" username="${db.username}" password="${db.password}" />
+
+
+	<!-- mongo模板操作对象 -->
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+
+	<!-- MongoDB GridFS Template 支持，操作mongodb存放的文件 -->
+	<mongo:mapping-converter id="converter"
+		db-factory-ref="mongoDbFactory" />
+	<bean id="gridFsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
+		<constructor-arg ref="mongoDbFactory" />
+		<constructor-arg ref="converter" />
+	</bean>
+    <!-- 扫描实现 -->
+    <context:component-scan base-package="com.test" />
 </beans>
