@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.test.bean.User;
 import com.test.service.MongoService;
 
+
 @RequestMapping("/mongo")
 @Controller
 public class MongoController {
