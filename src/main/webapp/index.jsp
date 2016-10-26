@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h2>dubbo test spring</h2>
-		<img src="./picture/5.gif" >
+		<h1>--------------</h1>
 		<!-- D:\eclipse-workspace\DubboTest2 -->
 	
 </body>

@@ -4,18 +4,14 @@ import java.io.Serializable;
 
 import org.mongodb.morphia.annotations.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-@Document(collection="User")
+//@Document(collection="User")
 public class User implements Serializable{
 
 	private static final long serialVersionUID = 8028989597226068116L;
-
-	private String name;
-	@Override
-	public String toString() {
-		return "User [name=" + name + ", age=" + age + ", sex=" + sex + "]";
-	}
+	
 	@Id
 	private String id;
+	private String name;
 	private int age;
 	private String sex;
 	public String getName() {
@@ -35,5 +31,15 @@ public class User implements Serializable{
 	}
 	public void setSex(String sex) {
 		this.sex = sex;
+	}
+	@Override
+	public String toString() {
+		return "User [name=" + name + ", age=" + age + ", sex=" + sex + "]";
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 }
