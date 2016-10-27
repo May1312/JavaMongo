@@ -1,9 +1,8 @@
 package com.test.bean;
 
-import java.io.Serializable;
-
 import org.mongodb.morphia.annotations.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.io.Serializable;
 //@Document(collection="User")
 public class User implements Serializable{
 

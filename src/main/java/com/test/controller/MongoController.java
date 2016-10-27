@@ -1,22 +1,23 @@
 package com.test.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.test.bean.User;
+import com.test.service.MongoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.test.bean.User;
-import com.test.service.MongoService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/mongo")
 @Controller
 public class MongoController {
-	
+
 	@Autowired
 	private MongoService mongoService;
 
@@ -28,12 +29,18 @@ public class MongoController {
 	}*/
 	@RequestMapping(value="/receive",method=RequestMethod.POST)
 	public ResponseEntity<Map<Object,Object>> receiveDate(@RequestBody User user){
-		//mongoService.add(user);
+		mongoService.add(user);
 		Map<Object,Object> map = new HashMap<Object,Object>();
 		map.put("message", "this method request is successful");
 		return ResponseEntity.ok(map);
 	}
 	@RequestMapping(value="/show",method=RequestMethod.GET)
+	public String queryUser(Model model){
+		List<User> users = mongoService.queryUser();
+		model.addAttribute("users",users);
+		return "userlist";
+	}
+	//@RequestMapping(value="/show",method=RequestMethod.GET)
 	public String show(){
 		return "user";
 	}

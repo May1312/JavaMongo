@@ -24,10 +24,10 @@
 	function getajax(){
 		var data = $('#form1').serializeObject();
 		$.ajax({
-				dataType: 'json',
+				dataType: 'json',/* 请求数据类型 */
 				type: 'post',
-          	 	contentType: 'application/json; charset=utf-8',
-           		data: JSON.stringify(data),
+          	 	contentType: 'application/json; charset=utf-8', /* 定义返回数据类型 */
+           		data: JSON.stringify(data),/* 格式化json */
 			    url: '/mongo/receive',
 			    success: function(msg){
 			    		alert(msg['message']);
@@ -37,6 +37,7 @@
           	 	}
 			}); 
 	};
+	/* 方法 表单数据转成json对象 */
 	$.fn.serializeObject = function()    
 	{    
 	   var o = {};    
