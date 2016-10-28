@@ -1,11 +1,12 @@
 package com.test.serviceImpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.test.bean.User;
 import com.test.dao.MongoDao;
 import com.test.service.MongoService;
+import com.test.util.MD5Utils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -17,8 +18,16 @@ public class MongoServiceImpl implements MongoService {
 
 	public void add(User user) {
 		try {
-			mongodab.add(user);
-			System.out.print(user);
+			//新增判断，存在该用户则判断，不存在择新增
+			System.out.print(user.getUserId());
+			if(StringUtils.isBlank(user.getUserId())){
+					user.setUserId(MD5Utils.md5(user.getName()+user.getAge()));
+					mongodab.add(user);
+					System.out.print("执行新增方法 ："+user);
+			}else {
+				mongodab.updateUser(user);
+				System.out.print("执行更新方法 ：" + user);
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

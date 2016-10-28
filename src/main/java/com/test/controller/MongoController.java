@@ -31,11 +31,14 @@ public class MongoController {
 	public ResponseEntity<Map<Object,Object>> receiveDate(@RequestBody User user){
 		mongoService.add(user);
 		Map<Object,Object> map = new HashMap<Object,Object>();
-		map.put("message", "this method request is successful");
+		map.put("status", "200");
+		Map<Object,Object> map2 = new HashMap<Object,Object>();
+		map2.put("result",map);
 		return ResponseEntity.ok(map);
 	}
 	@RequestMapping(value="/show",method=RequestMethod.GET)
 	public String queryUser(Model model){
+		//返回userId
 		List<User> users = mongoService.queryUser();
 		model.addAttribute("users",users);
 		return "userlist";
