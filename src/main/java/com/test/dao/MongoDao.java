@@ -95,4 +95,10 @@ public class MongoDao {
         query.field("userId").equal(userId);
         MongoUtil.getDataStore().delete(query);
     }
+
+    public int checkname(String name) {
+        Query<User> query = MongoUtil.getDataStore().createQuery(User.class);
+        query.field("name").equal(name);
+        return (int) query.countAll();
+    }
 }

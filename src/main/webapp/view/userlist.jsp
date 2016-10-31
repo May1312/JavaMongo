@@ -10,32 +10,35 @@
     <link rel="stylesheet" type="text/css" href="../css/icon.css">
     <link rel="stylesheet" type="text/css" href="../css/demo.css">
     <style type="text/css">
-        #fm{
-            margin:0;
-            padding:10px 30px;
+        #fm {
+            margin: 0;
+            padding: 10px 30px;
         }
-        .ftitle{
-            font-size:14px;
-            font-weight:bold;
-            color:#666;
-            padding:5px 0;
-            margin-bottom:10px;
-            border-bottom:1px solid #ccc;
+
+        .ftitle {
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            padding: 5px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
         }
-        .fitem{
-            margin-bottom:5px;
+
+        .fitem {
+            margin-bottom: 5px;
         }
-        .fitem label{
-            display:inline-block;
-            width:80px;
+
+        .fitem label {
+            display: inline-block;
+            width: 80px;
         }
     </style>
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
     <script type="text/javascript">
         var url;
-        function newUser(){
-            $('#dlg').dialog('open').dialog('setTitle','New User');
+        function newUser() {
+            $('#dlg').dialog('open').dialog('setTitle', 'New User');
             $('#fm').form('clear');
             /*单选默认选中*/
             $('input[name=sex]').get(0).checked = true;
@@ -56,47 +59,51 @@
             });
             return o;
         };
-        function editUser(){
+        function editUser() {
             var row = $('#dg').datagrid('getSelected');
-            if (row){
+            if (row) {
                 /*表格中的性别属性如何转换为数值,会修改表格数据---*/
-                if(row['sex']=='Male' || row['sex']==1){
-                    row['sex']=1;
-                }else
-                    row['sex']=0;
+                if (row['sex'] == 'Male' || row['sex'] == 1) {
+                    row['sex'] = 1;
+                } else
+                    row['sex'] = 0;
                 $('#fm').form('clear');
-                $('#dlg').dialog('open').dialog('setTitle','Edit User');
-                $('#fm').form('load',row);
-                url = 'update_user.php?id='+row.id;
+                $('#dlg').dialog('open').dialog('setTitle', 'Edit User');
+                $('#fm').form('load', row);
+                url = 'update_user.php?id=' + row.id;
             }
         }
-        function saveUser(){
-            var data = $('#fm').serializeObject();
-            $.ajax({
-                dataType: 'json', /* 请求数据类型 */
-                type: 'post',
-                contentType: 'application/json; charset=utf-8', /* 定义返回数据类型 */
-                data: JSON.stringify(data), /* 格式化json */
-                url: '/mongo/receive',
-                success: function(result){
-                    if (result.status==200){
-                        $('#dlg').dialog('close');		// close the dialog
-                        window.location.reload()// reload the user data
-                    } else {
-                        $.messager.show({
-                            title: 'Error',
-                            msg: result.msg
-                        });
+        function saveUser() {
+            //为空不提交
+            if ($('#fm').form('validate')) {
+                var data = $('#fm').serializeObject();
+                $.ajax({
+                    async : true,
+                    dataType: 'json', /* 请求数据类型 */
+                    type: 'post',
+                    contentType: 'application/json; charset=utf-8', /* 定义返回数据类型 */
+                    data: JSON.stringify(data), /* 格式化json */
+                    url: '/mongo/receive',
+                    success: function (result) {
+                        if (result.status == 200) {
+                            $('#dlg').dialog('close');		// close the dialog
+                            window.location.reload()// reload the user data
+                        } else {
+                            $.messager.show({
+                                title: 'Error',
+                                msg: result.msg
+                            });
+                        }
                     }
-                }
-            });
-            /*input框缓存*/
-            $('#fm').form('clear');
+                });
+                /*input框缓存*/
+                $('#fm').form('clear');
+            }
         }
-        function removeUser(){
+        function removeUser() {
             var row = $('#dg').datagrid('getSelected');
-            if (row){
-                $.messager.confirm('Confirm','Are you sure you want to remove this user?',function(r){
+            if (row) {
+                $.messager.confirm('Confirm', 'Are you sure you want to remove this user?', function (r) {
                     if (!r) {
                     } else {
                         $.ajax({
@@ -114,8 +121,25 @@
                             }
                         })
                     }
-                    })
+                })
+            }
+        }
+        function checkName(name){
+            $.ajax({
+                contentType: 'application/json',
+                type: 'get',
+                async:true,
+                dataType: 'json',
+                url: '/mongo/checkName?' + "name="+name,
+                success: function (dataResult, textStatus) {
+                    if(dataResult['count']>0){
+                        alert("已存在该名字");
+                    }
+                },
+                error: function (XMLHttpResponse) {
+                    alert("系统繁忙，请稍后再试！");
                 }
+            })
         }
     </script>
 </head>
@@ -144,8 +168,12 @@
             <td hidden="hidden">${user.userId}</td>
             <td>${user.name}</td>
             <td>${user.age}</td>
-            <c:if test="${user.sex==1}"><td id="sex">Male</td></c:if>
-            <c:if test="${user.sex==0}"><td id="sex">Female</td></c:if>
+            <c:if test="${user.sex==1}">
+                <td id="sex">Male</td>
+            </c:if>
+            <c:if test="${user.sex==0}">
+                <td id="sex">Female</td>
+            </c:if>
             <td>${user.registTime}</td>
         </tr>
     </c:forEach>
@@ -167,16 +195,16 @@
         </div>
         <div class="fitem">
             <label>Name:</label>
-            <input name="name" class="easyui-validatebox" required="true">
+            <input id="name" name="name" class="easyui-validatebox" required="true" onblur="checkName(this.value)" />
         </div>
         <div class="fitem">
             <label>Age:</label>
-            <input name="age" class="easyui-validatebox" required="true">
+            <input id="age" name="age" class="easyui-validatebox" required="true"/>
         </div>
         <div class="fitem">
             <label>Sex:</label>
-            <input type="radio" name="sex" value="1" />Male
-            <input type="radio" name="sex" value="0" />Female<br>
+            <input type="radio" name="sex" value="1"/>Male
+            <input type="radio" name="sex" value="0"/>Female<br>
         </div>
         <div class="fitem" hidden>
             <label>RegistTime:</label>
@@ -186,7 +214,8 @@
 </div>
 <div id="dlg-buttons">
     <a href="#" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()">Save</a>
-    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">Cancel</a>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#dlg').dialog('close')">Cancel</a>
 </div>
 </body>
 </html>

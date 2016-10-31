@@ -11,4 +11,6 @@ public interface MongoService {
 	public List<User> queryUser();
 
 	public void remove(String userId);
+
+	public int checkname(String name);
 }

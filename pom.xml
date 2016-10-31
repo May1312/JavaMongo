@@ -160,6 +160,7 @@
 				<version>2.2</version>
 				<configuration>
 					<port>80</port>
+					<charset>UTF-8</charset>
 					<path>/</path>
 					<server>tomcat7</server>
 				</configuration>

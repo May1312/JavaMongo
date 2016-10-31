@@ -46,4 +46,8 @@ public class MongoServiceImpl implements MongoService {
 		mongodab.remove(userId);
 	}
 
+	public int checkname(String name) {
+		return mongodab.checkname(name);
+	}
+
 }

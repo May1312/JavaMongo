@@ -27,35 +27,47 @@ public class MongoController {
 		//mongoService.add(user);
 		System.out.println("------");
 	}*/
-	@RequestMapping(value="/receive",method=RequestMethod.POST)
-	public ResponseEntity<Map<Object,Object>> receiveDate(@RequestBody User user){
+	@RequestMapping(value = "/receive", method = RequestMethod.POST)
+	public ResponseEntity<Map<Object, Object>> receiveDate(@RequestBody User user) {
 		mongoService.add(user);
-		Map<Object,Object> map = new HashMap<Object,Object>();
+		Map<Object, Object> map = new HashMap<Object, Object>();
 		map.put("status", "200");
-		Map<Object,Object> map2 = new HashMap<Object,Object>();
-		map2.put("result",map);
+		Map<Object, Object> map2 = new HashMap<Object, Object>();
+		map2.put("result", map);
 		return ResponseEntity.ok(map);
 	}
-	@RequestMapping(value="/show",method=RequestMethod.GET)
-	public String queryUser(Model model){
+
+	@RequestMapping(value = "/show", method = RequestMethod.GET)
+	public String queryUser(Model model) {
 		//返回userId
 		List<User> users = mongoService.queryUser();
-		model.addAttribute("users",users);
+		model.addAttribute("users", users);
 		return "userlist";
 	}
-	@RequestMapping(value="/remove/{userId}",method=RequestMethod.DELETE)
-	public ResponseEntity<Void> remove(@PathVariable("userId") String userId){
+
+	@RequestMapping(value = "/remove/{userId}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> remove(@PathVariable("userId") String userId) {
 		try {
-			if(StringUtils.isNotBlank(userId)){
-                mongoService.remove(userId);
+			if (StringUtils.isNotBlank(userId)) {
+				mongoService.remove(userId);
 				//return ResponseEntity.status(HttpStatus.OK).build();
 				return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-            }
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	}
+	@RequestMapping(value="/checkName",method=RequestMethod.GET)
+	public ResponseEntity<Map<Object, Object>> checkName(@RequestParam("name") String name){
+		int count = mongoService.checkname(name);
+		Map<Object,Object> map = new HashMap<Object, Object>();
+		if(count>0){
+			map.put("count",count);
+			return ResponseEntity.ok(map);
+		}
+		return null;
 	}
 }
