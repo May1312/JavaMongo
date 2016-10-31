@@ -5,10 +5,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="keywords" content="jquery,ui,easy,easyui,web">
     <meta name="description" content="easyui help you build your web page easily!">
-    <title>jQuery EasyUI CRUD Demo</title>
-    <link rel="stylesheet" type="text/css" href="http://www.w3cschool.cc/try/jeasyui/themes/default/easyui.css">
-    <link rel="stylesheet" type="text/css" href="http://www.w3cschool.cc/try/jeasyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css" href="http://www.w3cschool.cc/try/jeasyui/demo/demo.css">
+    <title>jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="../css/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../css/icon.css">
+    <link rel="stylesheet" type="text/css" href="../css/demo.css">
     <style type="text/css">
         #fm{
             margin:0;
@@ -30,8 +30,8 @@
             width:80px;
         }
     </style>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
-    <script type="text/javascript" src="http://www.w3cschool.cc/try/jeasyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
     <script type="text/javascript">
         var url;
         function newUser(){
@@ -90,25 +90,32 @@
                     }
                 }
             });
+            /*input框缓存*/
+            $('#fm').form('clear');
         }
         function removeUser(){
             var row = $('#dg').datagrid('getSelected');
             if (row){
                 $.messager.confirm('Confirm','Are you sure you want to remove this user?',function(r){
-                    if (r){
-                        $.post('remove_user.php',{id:row.id},function(result){
-                            if (result.success){
-                                $('#dg').datagrid('reload');	// reload the user data
-                            } else {
-                                $.messager.show({	// show error message
-                                    title: 'Error',
-                                    msg: result.msg
-                                });
+                    if (!r) {
+                    } else {
+                        $.ajax({
+                            type: 'post',
+                            dataType: 'json',
+                            url: '/mongo/remove/' + row.userId + '?_method=DELETE',
+                            data: row.userId,
+                            success: function (dataResult, textStatus) {
+                                $('#dlg').dialog('close');		// close the dialog
+                                window.location.reload()
+                            },
+                            error: function (XMLHttpResponse) {
+                                alert("系统繁忙，请稍后再试！");
+                                return false;
                             }
-                        },'json');
+                        })
                     }
-                });
-            }
+                    })
+                }
         }
     </script>
 </head>

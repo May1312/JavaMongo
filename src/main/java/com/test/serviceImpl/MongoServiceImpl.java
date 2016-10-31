@@ -42,4 +42,8 @@ public class MongoServiceImpl implements MongoService {
 		return null;
 	}
 
+	public void remove(String userId) {
+		mongodab.remove(userId);
+	}
+
 }

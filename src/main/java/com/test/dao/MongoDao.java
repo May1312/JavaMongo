@@ -1,9 +1,6 @@
 package com.test.dao;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.*;
 import com.test.bean.User;
 import com.test.util.DateUtils;
 import com.test.util.MongoUtil;
@@ -91,5 +88,11 @@ public class MongoDao {
         ops.set("age", user.getAge());
         ops.set("sex", user.getSex());
         MongoUtil.getDataStore().update(query, ops);
+    }
+
+    public void remove(String userId) {
+        Query<User> query = MongoUtil.getDataStore().createQuery(User.class);
+        query.field("userId").equal(userId);
+        MongoUtil.getDataStore().delete(query);
     }
 }
