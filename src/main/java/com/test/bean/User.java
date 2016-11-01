@@ -13,6 +13,8 @@ public class User implements Serializable{
 	private String userId;
 	private String name;
 	private int age;
+	//@Transient
+	//@JsonIgnore
 	private String sex;
 	private String registTime;
 	public String getName() {
