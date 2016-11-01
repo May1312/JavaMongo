@@ -133,7 +133,9 @@
                 url: '/mongo/checkName?' + "name="+name,
                 success: function (dataResult, textStatus) {
                     if(dataResult['count']>0){
-                        alert("已存在该名字");
+                        $.messager.alert('warning','The name already exist!');
+                        //置空input value值
+                            $('#name').val("");
                     }
                 },
                 error: function (XMLHttpResponse) {
@@ -195,7 +197,7 @@
         </div>
         <div class="fitem">
             <label>Name:</label>
-            <input id="name" name="name" class="easyui-validatebox" required="true" onblur="checkName(this.value)" />
+            <input id="name" name="name" class="easyui-validatebox" required="true" validType="equals['#pwd']" onblur="checkName(this.value)" />
         </div>
         <div class="fitem">
             <label>Age:</label>

@@ -1,7 +1,10 @@
 package com.test.bean;
 
+import org.mongodb.morphia.annotations.Entity;
+
 import java.io.Serializable;
 //@Document(collection="User")
+@Entity(noClassnameStored = true)//mongodb field className not save
 public class User implements Serializable{
 
 	private static final long serialVersionUID = 8028989597226068116L;
