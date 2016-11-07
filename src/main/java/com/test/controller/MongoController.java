@@ -38,36 +38,39 @@ public class MongoController {
 	}
 
 	@RequestMapping(value = "/show", method = RequestMethod.GET)
-	public String queryUser(Model model) {
+	public String queryUser(Model model,@RequestParam(value = "currentPage",defaultValue = "0") int currentPage,@RequestParam(value = "pageSize",defaultValue = "10") int pageSize) {
 		//返回userId
-		List<User> users = mongoService.queryUser();
+		List<User> users = mongoService.queryUser(currentPage,pageSize);
+		//total 所有条数
+		int total  = mongoService.queryUserCount();
 		model.addAttribute("users", users);
+		model.addAttribute("total",total);
 		return "userlist";
 	}
 
 	@RequestMapping(value = "/remove/{userId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> remove(@PathVariable("userId") String userId) {
+	public ResponseEntity<Map<Object,Object>> remove(@PathVariable("userId") String userId) {
+		Map<Object,Object> map = new HashMap<Object,Object>();
 		try {
 			if (StringUtils.isNotBlank(userId)) {
 				mongoService.remove(userId);
 				//return ResponseEntity.status(HttpStatus.OK).build();
-				return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+				 map = new HashMap<Object,Object>();
+				map.put("msg","remove successful");
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body(map);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
 		}
 
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
 	}
 	@RequestMapping(value="/checkName",method=RequestMethod.GET)
 	public ResponseEntity<Map<Object, Object>> checkName(@RequestParam("name") String name){
 		int count = mongoService.checkname(name);
 		Map<Object,Object> map = new HashMap<Object, Object>();
-		if(count>0){
 			map.put("count",count);
 			return ResponseEntity.ok(map);
-		}
-		return null;
 	}
 }

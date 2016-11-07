@@ -34,8 +34,8 @@ public class MongoServiceImpl implements MongoService {
 		}
 	}
 
-	public List<User> queryUser() {
-		List<User> users = mongodab.queryUser();
+	public List<User> queryUser(int currentPage, int pageSize) {
+		List<User> users = mongodab.queryUser(currentPage,pageSize);
 		if (users!=null){
 			return users;
 		}
@@ -48,6 +48,10 @@ public class MongoServiceImpl implements MongoService {
 
 	public int checkname(String name) {
 		return mongodab.checkname(name);
+	}
+
+	public int queryUserCount() {
+		return mongodab.queryUserCount();
 	}
 
 }

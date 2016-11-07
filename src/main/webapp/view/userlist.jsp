@@ -1,6 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
+<%--        easyui 获取当前页，每页显示条数
+            var currentPage = $('#dg').datagrid('options').pageNumber;
+            var pagerSize = $('#dg').datagrid('options').pageSize;
+            alert("当前页:"+currentPage+",显示条数:"+pagerSize);
+--%>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="keywords" content="jquery,ui,easy,easyui,web">
@@ -109,14 +114,13 @@
                         $.ajax({
                             type: 'post',
                             dataType: 'json',
-                            url: '/mongo/remove/' + row.userId + '?_method=DELETE',
-                            data: row.userId,
-                            success: function (dataResult, textStatus) {
+                            url: '${pageContext.request.contextPath}/mongo/remove/' + row.userId + '?_method=DELETE',
+                            success: function (msg) {
                                 $('#dlg').dialog('close');		// close the dialog
                                 window.location.reload()
                             },
-                            error: function (XMLHttpResponse) {
-                                alert("系统繁忙，请稍后再试！");
+                            error: function () {
+                                alert("系统繁忙，请稍后再试!！");
                                 return false;
                             }
                         })
@@ -125,23 +129,25 @@
             }
         }
         function checkName(name){
-            $.ajax({
-                contentType: 'application/json',
-                type: 'get',
-                async:true,
-                dataType: 'json',
-                url: '/mongo/checkName?' + "name="+name,
-                success: function (dataResult, textStatus) {
-                    if(dataResult['count']>0){
-                        $.messager.alert('warning','The name already exist!');
-                        //置空input value值
+            if(name) {
+                $.ajax({
+                    contentType: 'application/json',
+                    type: 'get',
+                    async: true,
+                    dataType: 'json',
+                    url: '/mongo/checkName?' + "name=" + name,
+                    success: function (dataResult, textStatus) {
+                        if (dataResult['count'] > 0) {
+                            $.messager.alert('warning', 'The name already exist!');
+                            //置空input value值
                             $('#name').val("");
+                        }
+                    },
+                    error: function () {
+                        alert("系统繁忙，请稍后再试！");
                     }
-                },
-                error: function (XMLHttpResponse) {
-                    alert("系统繁忙，请稍后再试！");
-                }
-            })
+                })
+            }
         }
     </script>
 </head>

@@ -27,9 +27,15 @@ public class MongoDao {
         AdvancedDatastore dataStore = MongoUtil.getDataStore();
         dataStore.insert(user);
     }
-    public List<User> queryUser(){
+    public List<User> queryUser(int currentPage, int pageSize){
         Query<User> query = MongoUtil.getDataStore().createQuery(User.class);
+        query.offset(currentPage);
+        query.limit(pageSize);
         return query.asList();
+    }
+    public int queryUserCount(){
+        Query<User> query = MongoUtil.getDataStore().createQuery(User.class);
+        return (int)query.countAll();
     }
     /**
      * spring管理的mongodb连接
