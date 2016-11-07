@@ -160,7 +160,8 @@
 
 <table id="dg" title="My Users" class="easyui-datagrid" style="width:700px;height:250px"
        toolbar="#toolbar" pagination="true"
-       rownumbers="true" fitColumns="true" singleSelect="true">
+       rownumbers="true" fitColumns="true" singleSelect="true" data-options="total:114"
+        url="${pageContext.request.contextPath}/mongo/show">
     <thead>
     <tr>
         <th field="userId" width="50" hidden="hidden">userId</th>
@@ -170,7 +171,7 @@
         <th field="registTime" width="90">registTime</th>
     </tr>
     </thead>
-    <tbody>
+    <%--<tbody>
     <c:forEach items="${users}" var="user">
         <tr>
             <td hidden="hidden">${user.userId}</td>
@@ -185,7 +186,7 @@
             <td>${user.registTime}</td>
         </tr>
     </c:forEach>
-    </tbody>
+    </tbody>--%>
 </table>
 <div id="toolbar">
     <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">New User</a>

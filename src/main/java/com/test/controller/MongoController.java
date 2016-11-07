@@ -1,6 +1,7 @@
 package com.test.controller;
 
 import com.test.bean.User;
+import com.test.bean.pageBean;
 import com.test.service.MongoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +38,26 @@ public class MongoController {
 		return ResponseEntity.ok(map);
 	}
 
-	@RequestMapping(value = "/show", method = RequestMethod.GET)
-	public String queryUser(Model model,@RequestParam(value = "currentPage",defaultValue = "0") int currentPage,@RequestParam(value = "pageSize",defaultValue = "10") int pageSize) {
+	@RequestMapping(value = "/showpage", method = {RequestMethod.GET})
+	public String  showpage() {
+		return "userlist";
+	}
+	@RequestMapping(value = "/show", method = {RequestMethod.POST,RequestMethod.GET})
+	public @ResponseBody pageBean queryUser(Model model,@RequestParam(value = "page",defaultValue = "0") int currentPage,@RequestParam(value = "rows",defaultValue = "20") int pageSize) {
 		//返回userId
 		List<User> users = mongoService.queryUser(currentPage,pageSize);
 		//total 所有条数
 		int total  = mongoService.queryUserCount();
-		model.addAttribute("users", users);
+		/*model.addAttribute("users", users);
 		model.addAttribute("total",total);
-		return "userlist";
+		return "userlist";*/
+		//返回json
+		pageBean pb = new pageBean();
+		pb.setList(users);
+		pb.setTotal(total);
+		pb.setPage(currentPage);
+		pb.setRows(pageSize);
+		return pb;
 	}
 
 	@RequestMapping(value = "/remove/{userId}", method = RequestMethod.DELETE)
